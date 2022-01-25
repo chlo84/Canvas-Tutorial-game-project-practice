@@ -1,11 +1,15 @@
-const canvas = document.getElementById('my canvas');
+const canvas = document.getElementById('myCanvas');
 const context = canvas.getContext('2d');
-context.beginPath = 
-context.fillStyle = 'red';
-context.fillRect = 50, 50, 100, 100;
-context.closePath = 
 
-context.beginPath = 
-context.fillStyle = 'green';
+function drawBall(){
+context.beginPath()
 context.arc = 240, 160, 20, 0, Math.PI*2, false;
-context.closePath = 
+context.fillStyle = 'red';
+context.fill()
+context.closePath()
+}
+
+
+
+
+
