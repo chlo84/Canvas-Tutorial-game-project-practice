@@ -1,19 +1,51 @@
-const canvas = document.getElementById('myCanvas');
-const context = canvas.getContext('2d');
-let ball1 = canvas.width/2;
-let ball2 = canvas.height-30;
-let lt1 = 2;
-let lt2 = -2;
+let canvas = document.getElementById('myCanvas');
+let context = canvas.getContext('2d');
 let ballRadius = 10;
+let x = canvas.width/2;
+let y = canvas.height-30;
+let dx = 2;
+let dy = -2;
 let paddleHeight = 10;
 let paddleWidth = 75;
-let paddleX = (canvas.width-paddleWidth) / 2;
+let paddleX = (canvas.width-paddleWidth)/2;
 let rightPressed = false;
 let leftPressed = false;
+let brickRowCount = 3;
+let brickColumnCount = 5;
+let brickWidth = 75;
+let brickHeight = 20;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft = 30;
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+let bricks = [];
+for(let c =)
+
+function keyDownHandler(e) {
+    if(e.key == "Right" || e.key == "ArrowRight"){
+        rightPressed = true;
+    }
+    else if(e.key == "Left" || e.key == "ArrowLeft"){
+        leftPressed = true;
+    }
+    
+    }
+    function keyUpHandler(e){
+        if(e.key == "Right" || e.key == "ArrowRight"){
+            rightPressed = false;
+        }
+        else if(e.key == "Left" || e.key == "ArrowLeft"){
+            leftPressed = false;
+        }
+    }
+
 
 function drawBall(){
     context.beginPath();
-    context.arc(ball1, ball2, ballRadius, 0, Math.PI*2);
+    context.arc(x, y, ballRadius, 0, Math.PI*2);
     context.fillStyle = 'green';
     context.fill();
     context.closePath();
@@ -27,60 +59,61 @@ context.fill();
 context.closePath();
 }
 
+function drawBricks(){
+    for(let c = 0; c < brickColumnCount; c++){
+        for(let r = 0; r < brickRowCount; r++){
+            let brickX = (c*(brickWidth + brickPadding))+ brickOffsetLeft;
+            let brickY = (r*(brickHeight + brickPadding))+ brickOffsetTop;
+            bricks[c][r].x = brickX;
+            bricks[c][r].y = brickY;
+            context.beginPath();
+            context.rect(brickX, brickY, brickWidth, brickHeight);
+            contextfillStyle = "#0095DD";
+            context.fill();
+            context.closePath();
+        }
+    }
+}
+
 function draw(){
     context.clearRect(0, 0, canvas.width, canvas.height);
+    drawBricks();
     drawBall();
-    context.beginPath();
-    context.arc(ball1, ball2, 10, 0, Math.PI*2);
-    context.fillStyle = 'red';
-    context.fill();
-    context.closePath();
-    ball1 += lt1;
-    ball2 += lt2; 
-    if(ball1 + lt1 < 0){
-        lt1 = -lt1;
-    } 
-    if(ball1 + lt1 > canvas.height){
-        lt1 = -lt1;
+    drawPaddle();
+    
+    if(x + dx > canvas.width-ballRadius || x + dx < ballRadius){
+        dx = -dx;
     }
-    if(ball1 + lt1 > canvas.height || ball1 + lt1 < 0){
-        lt1 = -lt1;
+    if(y + dy < ballRadius){
+        dy = -dy;
     }
-    if(ball2 + lt2 > canvas.width-ballRadius || ball2 + lt2 < 0){
-        lt2 = -lt2;
+    else if(y + dy > canvas.height-ballRadius){
+        if(x > paddleX && x < paddleX + paddleWidth){
+            if(y = y-paddleHeight){
+                dy = -dy;
+            }
+        }
+        else {
+            alert("GAME OVER");
+            document.location.reload();
+            clearInterval(interval);
+        }
+        
     }
-    if(ball1 + lt1 > canvas.height || ball1 + lt1 < 0){
-        lt1 = -lt1;
-    }
-    if(rightPressed){
+    if(rightPressed && paddleX < canvas.width-paddleWidth){
         paddleX += 7;
+        
     }
-    else if(leftPressed){
+    else if(leftPressed && paddleX > 0){
         paddleX -= 7;
-    }
+        
+        }
+    
+    x += dx;
+    y += dy;
+    
 }
-
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-
-function keyDownHandler(e) {
-if(e.key == "Right" || e.key == "ArrowRight"){
-    rightPressed = true;
-}
-else if(e.key == "Left" || e.key == "ArrowLeft"){
-    leftPressed = true;
-}
-
-}
-function keyUpHandler(e){
-    if(e.key == "Right" || e.key == "ArrowRight"){
-        rightPressed = false;
-    }
-    else if(e.key == "Left" || e.ket == "ArrowLeft"){
-        leftPressed = false;
-    }
-}
-setInterval(draw, 8);
+let interval = setInterval(draw, 10);
 
 
 
